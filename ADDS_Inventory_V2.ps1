@@ -7137,11 +7137,7 @@ Function ProcessCAInformation
 		WriteHTMLLine 4 0 $txt
 	}
 
-	$rootDSE = [ADSI]"LDAP://RootDSE"
-
-	$configNC = $rootDSE.Properties[ 'configurationNamingContext' ].Value -as [String]
-
-	$rootCA = 'CN=Certification Authorities,CN=Public Key Services,CN=Services,' + $configNC
+	$rootCA = 'CN=Certification Authorities,CN=Public Key Services,CN=Services,' + $script:configNC
 	$rootObj = [ADSI] ( 'LDAP://' + $rootCA )
 	$RootCnt = 0
 	
@@ -7246,7 +7242,7 @@ Function ProcessCAInformation
 		WriteHTMLLine 4 0 $txt
 	}
 
-	$allCA = 'CN=Enrollment Services,CN=Public Key Services,CN=Services,' + $configNC
+	$allCA = 'CN=Enrollment Services,CN=Public Key Services,CN=Services,' + $script:configNC
 	$allObj = [ADSI] ( 'LDAP://' + $allCA )
 	
 	If([string]::isnullorempty($allObj.psbase.children) -and !([string]::isnullorempty($rootObj.psbase.children)))
@@ -7399,7 +7395,7 @@ Function ProcessADOptionalFeatures
 		WriteHTMLLine 3 0 $txt
 	}
 
-	$ADOptionalFeatures = Get-ADOptionalFeature -Filter * -EA 0
+	$ADOptionalFeatures = Get-ADOptionalFeature -Server $ADForest -Filter * -EA 0
 	
 	If($? -and $Null -ne $ADOptionalFeatures)
 	{
